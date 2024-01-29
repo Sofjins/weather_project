@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 
 
 def homepage(request):
@@ -32,24 +32,22 @@ def loginuser(request):
     if request.method == "GET":
         return render(request, 'users/loginuser.html', {'form':AuthenticationForm()})
     else:
-        if request.POST['username'] in User.username:
-            if request.POST['password1'] == User.password:
-                return render(request, 'users/currentuser.html')
-            else:
-                return render(request, 'users/loginuser.html', 
-                          {'form':AuthenticationForm(), 'error': 'Passwords did not match'})
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is None:
+            return render(request, 'users/loginuser.html', {'form': AuthenticationForm(), 'error': 'Username or password does not match'})
         else:
-            return render(request, 'users/loginuser.html', 
-                          {'form':AuthenticationForm(), 'error': 'Username does not excist'})
+            login(request, user)
+            return redirect('currentuser')
     
 
 
 def logoutuser(request):
     if request.method == "POST":
         logout(request)
-        return redirect('home')
+        return redirect('homepage')
 
 def currentuser(request):
+    
     return render(request, 'users/currentuser.html')
 
 

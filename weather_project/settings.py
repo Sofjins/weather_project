@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'weather_app',
     'api',
     'users',
+    'cities',
 ]
 
 MIDDLEWARE = [

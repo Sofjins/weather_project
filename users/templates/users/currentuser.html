@@ -1,7 +1,17 @@
 {% extends 'users/base.html' %}
 
 {% block content %}
+    {% csrf_token %}
+    <h1>Welcome, {{ user }}!</h1>
+
+    <h3>Please choose your location</h3>
+    Country:
+    {{ form }}
+    <br>
+    <br>
+    City:
+    {{ form }}
 
 {% endblock %}
-{% csrf_token %}
-<h1>Welcome, {{ user }}!</h1>
+
+
